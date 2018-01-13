@@ -1,6 +1,5 @@
 const fs = require('fs');
 const prompt = require('prompt');
-const csv = require('csvtojson');
 const path = require('path');
 
 const databasePath = path.resolve('./database.json');
@@ -52,6 +51,24 @@ function editTasks() {
 
 }
 
+function deleteTasks() {
+
+  console.log('Which index would you like to edit?');
+
+  listTasks();
+
+  prompt.start();
+
+  prompt.get(['index'], function(err, result) {
+
+    database.tasks.splice(result.index - 1, 1);
+
+    save();
+
+  });
+
+}
+
 function save() {
   fs.writeFile(databasePath, JSON.stringify(database), 'utf8', function(err) {
     if (err) throw err;
@@ -62,20 +79,24 @@ function save() {
 
 prompt.start();
 
-console.log('Would you like to list, edit or add');
+console.log('Would you like to create, read, update, or delete');
 
 prompt.get(['command'], function(err, result) {
 
   switch (result.command) {
-    case 'list':
+    case 'read':
       listTasks();
       break;
 
-    case 'edit':
+    case 'update':
       editTasks();
       break;
 
-    case 'add':
+    case 'delete':
+      deleteTasks();
+      break;
+
+    case 'create':
       addTask();
       break;
 
